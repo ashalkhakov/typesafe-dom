@@ -385,3 +385,82 @@ castfn
 put_document (documentref(window_document)): void = "mac#"
 
 (* ****** ****** *)
+
+fun
+offsetLeft {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): double = "mac#"
+fun
+offsetTop {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): double = "mac#"
+fun
+offsetWidth {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): double = "mac#"
+fun
+offsetHeight {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): double = "mac#"
+fun
+offsetParent {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): [p1:addr] domnoderef0 (Element, d, p1) = "mac#"
+
+fun
+clientWidth {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): double = "mac#"
+fun
+clientHeight {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): double = "mac#"
+
+typedef domrect = $extype_struct "DOMRect" of {
+  x= double, y= double
+, width= double, height= double
+, top= double, right= double, bottom= double, left= double
+}
+
+fun
+getBoundingClientRect {d,p:addr} (
+  elem: !domnoderef1 (Element, d, p)
+): domrect = "mac#"
+
+fun
+elementFromPoint {d:addr} (
+  doc: !documentref (d), left: double, top: double
+): [p:addr] domnoderef0 (Element, d, p) = "mac#"
+
+fun
+get_scrollWidth {d,p:addr} (
+  !domnoderef1(Element, d, p)
+): double = "mac#"
+fun
+get_scrollHeight {d,p:addr} (
+  !domnoderef1(Element, d, p)
+): double = "mac#"
+
+fun
+set_scrollTop {d,p:addr} (
+  !domnoderef1(Element, d, p), v: double
+): void = "mac#"
+fun
+get_scrollTop {d,p:addr} (
+  !domnoderef1(Element, d, p)
+): double = "mac#"
+
+fun
+set_scrollLeft {d,p:addr} (
+  !domnoderef1(Element, d, p), v: double
+): void = "mac#"
+fun
+get_scrollLeft {d,p:addr} (
+  !domnoderef1(Element, d, p)
+): double = "mac#"
+
+fun
+scrollIntoView {d,p:addr} (
+  !domnoderef1(Element, d, p)
+, top: bool
+): void = "mac#"

@@ -7,8 +7,8 @@ DONE: reflecting the node types back to the class decs
 DONE: node methods
 DONE: node properties
 TODO: class and data-* attributes
-TODO: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName, getElementsByClassName
-TODO: section 5, properties for elements
+DONE: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName, getElementsByClassName
+DONE: section 5, properties for elements
 TODO: section 6, style
 TODO: section 7, text node methods
 TODO: sec 7, document fragments
