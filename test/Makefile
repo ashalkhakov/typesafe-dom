@@ -21,7 +21,9 @@ offset_dats.js \
 bcr_dats.js \
 efp_dats.js \
 scrollTopLeft_dats.js \
-scrollIntoView_dats.js
+scrollIntoView_dats.js \
+style_dats.js \
+computedStyle_dats.js
 
 ######
 

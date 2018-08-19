@@ -182,6 +182,9 @@ fun querySelectorAll {c:cls;d,p:addr | c <= Document || c <= Element}
   (doc: !domnoderef1 (c, d, p), selector: string):
   [n:int] domnodelist (d, n) = "mac#"
 
+fun querySelector {c:cls;d,p:addr | c <= Document || c <= Element}
+  (doc: !domnoderef1 (c, d, p), selector: string):
+  domnoderef0 (Element, d, p) = "mac#"
 
 fun domnoderef_is_null {c:cls;d,l,p:addr} (!domnoderef (c, d, l, p))
   : bool (l == null) = "mac#"
@@ -464,3 +467,53 @@ scrollIntoView {d,p:addr} (
   !domnoderef1(Element, d, p)
 , top: bool
 ): void = "mac#"
+
+(* ****** ****** *)
+
+absvtype
+CSSStyleDeclaration (p:addr, writable: bool) = ptr
+vtypedef CSSStyleDeclaration (p:addr) = [w:bool] CSSStyleDeclaration(p, w)
+
+fun
+get_style {d,l,p:addr | l > null} (
+  !domnoderef(Element, d, l, p)
+): CSSStyleDeclaration (l, true) = "mac#"
+castfn
+style_free {l:addr} (CSSStyleDeclaration l): void
+
+fun
+getPropertyValue {p:addr} (
+  s: !CSSStyleDeclaration(p), p: string
+): string = "mac#" // or null
+
+fun
+removeProperty {p:addr} (
+  s: !CSSStyleDeclaration(p, true), p: string
+): void = "mac#"
+
+fun
+setProperty {p:addr} (
+  s: !CSSStyleDeclaration(p, true)
+, p: string, v: string
+, priorty: string
+): void = "mac#"
+
+fun
+getComputedStyle {d,l,p:addr | l > null} (
+  e: !domnoderef (Element, d, l, p)
+): CSSStyleDeclaration (l, false) = "mac#window_getComputedStyle"
+
+(* ****** ****** *)
+// text/comment nodes
+
+(* TODO
+appendData(
+  CharacterData(n) >> CharacterData(n+m), data: string(m)
+): void
+insert{i<n}(CharacterData(n), offset:int(i), string data)
+deleteData{i+j<n}(CharacterData(n), offset:int(i), count:int(j))
+replaceData{i+j<n}(
+  CharacterData(n) >> CharacterData(n-j+m)
+, offset(i), count(j), data:string(m)
+)
+*)

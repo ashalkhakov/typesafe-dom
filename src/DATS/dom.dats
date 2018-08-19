@@ -11,6 +11,7 @@ function getElementById(d,id) { return d.getElementById(id); }
 function getElementsByTagName(d,t) { return d.getElementsByTagName(t); }
 function getElementsByClassName(d,c) { return d.getElementsByClassName(c); }
 function querySelectorAll(d,s) { return d.querySelectorAll(s); }
+function querySelector(d, s) { return d.querySelector(s); }
 function domnoderef_is_null (d) { return d === null; }
 function get_document () { return window.document; }
 function createAttribute(doc, name) { return doc.createAttribute(name); }
@@ -56,5 +57,11 @@ function set_scrollTop(e, v) { return e.scrollTop = v; }
 function get_scrollLeft(e) { return e.scrollLeft; }
 function set_scrollLeft(e, v) { return e.scrollLeft = v; }
 function scrollIntoView(e, v) { return e.scrollIntoView(v); }
+
+function get_style (d) { return d.style; }
+function getPropertyValue (s, p) { return s.getPropertyValue(p); }
+function removeProperty (s, p) { return s.removeProperty(p); }
+function setProperty (s, p, v, r) { return s.setProperty(p, v, r); }
+function window_getComputedStyle(e) { return window.getComputedStyle(e); }
 
 %}

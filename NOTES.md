@@ -9,7 +9,7 @@ DONE: node properties
 TODO: class and data-* attributes
 DONE: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName, getElementsByClassName
 DONE: section 5, properties for elements
-TODO: section 6, style
+DONE: section 6, style
 TODO: section 7, text node methods
 TODO: sec 7, document fragments
 TODO: 11, event handling! now this makes it all worth it! after this, integrate into my very own custom expression editor!
@@ -47,18 +47,4 @@ Node
   - Comment
   - Text
     - CDataSection
-*)
-
-(*
-// text/comment nodes
-
-appendData(
-  CharacterData(n) >> CharacterData(n+m), data: string(m)
-): void
-insert{i<n}(CharacterData(n), offset:int(i), string data)
-deleteData{i+j<n}(CharacterData(n), offset:int(i), count:int(j))
-replaceData{i+j<n}(
-  CharacterData(n) >> CharacterData(n-j+m)
-, offset(i), count(j), data:string(m)
-)
 *)

@@ -17,8 +17,6 @@ hello()
   var tmp7
   var tmp8
   var tmp9
-  var tmp11
-  var tmp13
   var tmp15
   var tmp16
   var tmp18
@@ -38,41 +36,45 @@ hello()
   tmp8 = nodeType(tmp2);
   tmp7 = ats2jspre_eq_int1_int1(1, tmp8);
   atspre_assert_bool1(tmp7);
-  tmp9 = getBoundingClientRect(tmp2);
-  tmp11 = ats2jspre_eq_double_double(125.0, tmp9.height);
-  atspre_assert_bool0(tmp11);
-  tmp13 = ats2jspre_eq_double_double(125.0, tmp9.width);
-  atspre_assert_bool0(tmp13);
-  tmp16 = offsetHeight(tmp2);
-  tmp15 = ats2jspre_eq_double_double(tmp9.height, tmp16);
+  tmp9 = get_style(tmp2);
+  setProperty(tmp9, "background-color", "red", "");
+  setProperty(tmp9, "border", "1px solid black", "");
+  setProperty(tmp9, "width", "100px", "");
+  setProperty(tmp9, "height", "100px", "");
+  tmp16 = getPropertyValue(tmp9, "background-color");
+  tmp15 = ats2jspre_eq_string_string("red", tmp16);
   atspre_assert_bool0(tmp15);
-  tmp19 = offsetWidth(tmp2);
-  tmp18 = ats2jspre_eq_double_double(tmp9.width, tmp19);
+  tmp19 = getPropertyValue(tmp9, "border");
+  tmp18 = ats2jspre_eq_string_string("1px solid black", tmp19);
   atspre_assert_bool0(tmp18);
-  tmp22 = clientHeight(tmp2);
-  tmp21 = ats2jspre_eq_double_double(75.0, tmp22);
+  tmp22 = getPropertyValue(tmp9, "width");
+  tmp21 = ats2jspre_eq_string_string("100px", tmp22);
   atspre_assert_bool0(tmp21);
-  tmp25 = clientWidth(tmp2);
-  tmp24 = ats2jspre_eq_double_double(75.0, tmp25);
+  tmp25 = getPropertyValue(tmp9, "height");
+  tmp24 = ats2jspre_eq_string_string("100px", tmp25);
   atspre_assert_bool0(tmp24);
+  removeProperty(tmp9, "background-color");
+  removeProperty(tmp9, "border");
+  removeProperty(tmp9, "width");
+  removeProperty(tmp9, "height");
   tmp1;
   return/*_void*/;
 } // end-of-function
 
 // dynloadflag_minit
-var _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag = 0;
+var _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_style_056_dats__dynloadflag = 0;
 
 function
-_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynload()
+_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_style_056_dats__dynload()
 {
 //
 // knd = 0
   var tmplab, tmplab_js
 //
   // ATSdynload()
-  // ATSdynloadflag_sta(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag(64))
-  if(ATSCKiseqz(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag)) {
-    _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag = 1 ; // flag is set
+  // ATSdynloadflag_sta(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_style_056_dats__dynloadflag(63))
+  if(ATSCKiseqz(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_style_056_dats__dynloadflag)) {
+    _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_style_056_dats__dynloadflag = 1 ; // flag is set
     hello();
   } // end-of-if
   return/*_void*/;
@@ -86,7 +88,7 @@ my_dynload()
 // knd = 0
   var tmplab, tmplab_js
 //
-  _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynload();
+  _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_style_056_dats__dynload();
   return/*_void*/;
 } // end-of-function
 
