@@ -12,67 +12,77 @@ hello()
 // knd = 0
   var tmp1
   var tmp2
-  var tmp4
+  var tmp3
   var tmp5
-  var tmp7
+  var tmp6
   var tmp8
   var tmp9
   var tmp11
-  var tmp13
+  var tmp12
+  var tmp14
   var tmp15
-  var tmp16
-  var tmp18
+  var tmp17
   var tmp19
+  var tmp20
   var tmp21
-  var tmp22
+  var tmp23
   var tmp24
-  var tmp25
+  var tmp26
+  var tmp27
+  var tmp30
+  var tmp31
   var tmplab, tmplab_js
 //
   // __patsflab_hello
   tmp1 = get_document();
-  tmp2 = getElementById(tmp1, "d");
-  tmp5 = domnoderef_is_null(tmp2);
-  tmp4 = ats2jspre_neg_bool1(tmp5);
-  atspre_assert_bool1(tmp4);
-  tmp8 = nodeType(tmp2);
-  tmp7 = ats2jspre_eq_int1_int1(1, tmp8);
-  atspre_assert_bool1(tmp7);
-  tmp9 = getBoundingClientRect(tmp2);
-  tmp11 = ats2jspre_eq_double_double(125.0, tmp9.height);
-  atspre_assert_bool0(tmp11);
-  tmp13 = ats2jspre_eq_double_double(125.0, tmp9.width);
-  atspre_assert_bool0(tmp13);
-  tmp16 = offsetHeight(tmp2);
-  tmp15 = ats2jspre_eq_double_double(tmp9.height, tmp16);
-  atspre_assert_bool0(tmp15);
-  tmp19 = offsetWidth(tmp2);
-  tmp18 = ats2jspre_eq_double_double(tmp9.width, tmp19);
-  atspre_assert_bool0(tmp18);
-  tmp22 = clientHeight(tmp2);
-  tmp21 = ats2jspre_eq_double_double(75.0, tmp22);
-  atspre_assert_bool0(tmp21);
-  tmp25 = clientWidth(tmp2);
-  tmp24 = ats2jspre_eq_double_double(75.0, tmp25);
-  atspre_assert_bool0(tmp24);
+  tmp2 = createDocumentFragment(tmp1);
+  tmp3 = createElement(tmp1, "li");
+  set_textContent(tmp3, "blue");
+  tmp5 = appendChild(tmp2, tmp3);
+  tmp6 = createElement(tmp1, "li");
+  set_textContent(tmp6, "green");
+  tmp8 = appendChild(tmp2, tmp6);
+  tmp9 = createElement(tmp1, "li");
+  set_textContent(tmp9, "red");
+  tmp11 = appendChild(tmp2, tmp9);
+  tmp12 = createElement(tmp1, "li");
+  set_textContent(tmp12, "blue");
+  tmp14 = appendChild(tmp2, tmp12);
+  tmp15 = createElement(tmp1, "li");
+  set_textContent(tmp15, "pink");
+  tmp17 = appendChild(tmp2, tmp15);
+  tmp20 = get_textContent(tmp2);
+  tmp19 = ats2jspre_eq_string_string("bluegreenredbluepink", tmp20);
+  atspre_assert_bool0(tmp19);
+  tmp21 = querySelector(tmp1, "ul");
+  tmp24 = domnoderef_is_null(tmp21);
+  tmp23 = ats2jspre_neg_bool1(tmp24);
+  atspre_assert_bool1(tmp23);
+  tmp27 = nodeType(tmp21);
+  tmp26 = ats2jspre_eq_int1_int1(1, tmp27);
+  atspre_assert_bool1(tmp26);
+  fragment_appendChild(tmp21, tmp2);
+  tmp31 = get_innerHTML(tmp21);
+  tmp30 = ats2jspre_eq_string_string("<li>blue</li><li>green</li><li>red</li><li>blue</li><li>pink</li>", tmp31);
+  atspre_assert_bool0(tmp30);
   tmp1;
   return/*_void*/;
 } // end-of-function
 
 // dynloadflag_minit
-var _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag = 0;
+var _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_frag1_056_dats__dynloadflag = 0;
 
 function
-_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynload()
+_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_frag1_056_dats__dynload()
 {
 //
 // knd = 0
   var tmplab, tmplab_js
 //
   // ATSdynload()
-  // ATSdynloadflag_sta(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag(64))
-  if(ATSCKiseqz(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag)) {
-    _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynloadflag = 1 ; // flag is set
+  // ATSdynloadflag_sta(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_frag1_056_dats__dynloadflag(68))
+  if(ATSCKiseqz(_057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_frag1_056_dats__dynloadflag)) {
+    _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_frag1_056_dats__dynloadflag = 1 ; // flag is set
     hello();
   } // end-of-if
   return/*_void*/;
@@ -86,7 +96,7 @@ my_dynload()
 // knd = 0
   var tmplab, tmplab_js
 //
-  _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_bcr_056_dats__dynload();
+  _057_home_057_artyom_057_projects_057_typesafe_055_dom_057_test_057_frag1_056_dats__dynload();
   return/*_void*/;
 } // end-of-function
 

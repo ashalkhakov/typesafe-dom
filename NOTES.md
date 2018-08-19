@@ -11,7 +11,7 @@ DONE: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName, getElements
 DONE: section 5, properties for elements
 DONE: section 6, style
 TODO: section 7, text node methods
-TODO: sec 7, document fragments
+DONE: sec 8, document fragments
 TODO: 11, event handling! now this makes it all worth it! after this, integrate into my very own custom expression editor!
 TODO: more working programs to see if the current style is OK or not (especially with cycles and stuff)
 

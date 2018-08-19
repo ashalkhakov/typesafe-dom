@@ -23,7 +23,8 @@ efp_dats.js \
 scrollTopLeft_dats.js \
 scrollIntoView_dats.js \
 style_dats.js \
-computedStyle_dats.js
+computedStyle_dats.js \
+frag1_dats.js
 
 ######
 

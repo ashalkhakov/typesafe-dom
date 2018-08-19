@@ -64,4 +64,8 @@ function removeProperty (s, p) { return s.removeProperty(p); }
 function setProperty (s, p, v, r) { return s.setProperty(p, v, r); }
 function window_getComputedStyle(e) { return window.getComputedStyle(e); }
 
+function createDocumentFragment(d) { return d.createDocumentFragment(); }
+function fragment_appendChild (n, s) { return n.appendChild(s); }
+function fragment_insertBefore (n, s, b) { return n.insertBefore(s, b); }
+
 %}

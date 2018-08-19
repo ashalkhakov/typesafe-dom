@@ -32,6 +32,7 @@ hello(): void = "mac#"
 implement
 hello() = let
   val doc = get_document ()
+  prval () = window_document_nonnull ()
   val div = getElementById (doc, "red")
   val () = assert (~domnoderef_is_null (div))
   val () = assert (eq_NodeType_NodeType (ELEMENT_NODE, nodeType div))

@@ -27,6 +27,7 @@ classdec CharacterData : Node
 classdec Comment : CharacterData
 classdec Text : CharacterData
 classdec CDataSection : Text
+classdec DocumentFragment : Node
 
 abst@ype NodeType (cls) = int
 macdef ELEMENT_NODE = $extval (NodeType (Element), "1")
@@ -39,7 +40,7 @@ macdef PROCESSING_INSTRUCTION_NODE = $extval (NodeType(ProcessingInstruction), "
 macdef COMMENT_NODE = $extval (NodeType(Comment), "8")
 macdef DOCUMENT_NODE = $extval (NodeType(Document), "9")
 macdef DOCUMENT_TYPE_NODE = $extval (NodeType(DocumentType), "10")
-// DOCUMENT_FRAGMENT_NODE (11, ?)
+macdef DOCUMENT_FRAGMENT_NODE = $extval (NodeType(DocumentFragment), "11")
 macdef NOTATION_NODE = $extval (NodeType(Notation), "12")
 
 fun
@@ -53,13 +54,11 @@ dataprop ParentChild (cls, cls) = // TODO: DOM 1.1.1 ?
   | PC_Document_ProcessingInstruction (Document, ProcessingInstruction)
   | PC_Document_Comment (Document, Comment)
   | PC_Document_DocumentType (Document, DocumentType)
+  | PC_DFElement (DocumentFragment, Element)
+  | PC_DFProcessingInstruction (DocumentFragment, ProcessingInstruction)
+  | PC_DFCharacterData (DocumentFragment, CharacterData)
+  // | DocumentFragment, EntityReference  
 (*
-PC_DocumentFragment_Element (DocumentFragment_Element)
-DocumentFragment, ProcessingInstruction
-DocumentFragment, Comment
-DocumentFragment, Text
-DocumentFragment, CDATASection
-DocumentFragment, EntityReference
 EntityReference, Element
 EntityReference, ProcessingInstruction
 EntityReference, Comment
@@ -166,9 +165,10 @@ domnamednodemap_item {n:pos;i:nat;d,p:addr | i < n}
 castfn
 domnamednodemap_free {n:int;d,p:addr} (domnamednodemap(n,d,p)): void
 
-
-fun getElementById {d:addr} (doc: !documentref(d), id: string):
-  [p:agz] domnoderef0 (Element, d, p) = "mac#"
+fun getElementById
+  {c:cls;d,p:addr | c <= Document || c <= Element || c <= DocumentFragment}
+  (doc: !domnoderef1 (c, d, p), id: string):
+  [p1:agz] domnoderef0 (Element, d, p1) = "mac#"
 
 fun getElementsByTagName {c:cls;d,p:addr | c <= Document || c <= Element}
   (doc: !domnoderef1 (c, d, p), tagname: string):
@@ -178,11 +178,11 @@ fun getElementsByClassName {c:cls;d,p:addr | c <= Document || c <= Element}
   (doc: !domnoderef1 (c, d, p), classname: string):
   [n:int] domnodelist (d, n) = "mac#"
 
-fun querySelectorAll {c:cls;d,p:addr | c <= Document || c <= Element}
+fun querySelectorAll {c:cls;d,p:addr | c <= Document || c <= Element || c <= DocumentFragment}
   (doc: !domnoderef1 (c, d, p), selector: string):
   [n:int] domnodelist (d, n) = "mac#"
 
-fun querySelector {c:cls;d,p:addr | c <= Document || c <= Element}
+fun querySelector {c:cls;d,p:addr | c <= Document || c <= Element || c <= DocumentFragment}
   (doc: !domnoderef1 (c, d, p), selector: string):
   domnoderef0 (Element, d, p) = "mac#"
 
@@ -212,7 +212,7 @@ fun attributes {c:cls;d,p:addr | c <= Element}
   (!domnoderef1(c, d, p)) : [n:int] domnamednodemap (n, d, p) = "mac#"
 
 
-fun children {c:cls;d,p:addr}
+fun children {c:cls;d,p:addr | c <= Document || c <= Element || c <= DocumentFragment}
   (!domnoderef1(c, d, p)): [n:int] domnodelist (d, n) = "mac#"
 
 fun firstChild {c:cls;d,l,p:addr | l > null}
@@ -240,13 +240,17 @@ fun parentNode {c:cls;d,l,p:addr}
   (!domnoderef1(c, d, p)): [c':cls;p1:addr] domnoderef(c', d, p, p1) = "mac#"
 
 
-fun set_innerHTML {c:cls;d,p:addr | c <= Element} (!domnoderef1(c, d, p), s: string): void = "mac#"
+fun set_innerHTML {c:cls;d,p:addr | c <= Document || c <= Element}
+  (!domnoderef1(c, d, p), s: string): void = "mac#"
 
-fun get_innerHTML {c:cls;d,p:addr | c <= Element} (!domnoderef1(c, d, p)): string = "mac#"
+fun get_innerHTML {c:cls;d,p:addr | c <= Document || c <= Element}
+  (!domnoderef1(c, d, p)): string = "mac#"
 
-fun set_textContent {c:cls;d,p:addr | c <= Element} (!domnoderef1(c, d, p), s: string): void = "mac#"
+fun set_textContent {c:cls;d,p:addr | c <= Document || c <= Element || c <= DocumentFragment}
+  (!domnoderef1(c, d, p), s: string): void = "mac#"
 
-fun get_textContent {c:cls;d,p:addr | c <= Element} (!domnoderef1(c, d, p)): string = "mac#"
+fun get_textContent {c:cls;d,p:addr | c <= Document || c <= Element || c <= DocumentFragment}
+  (!domnoderef1(c, d, p)): string = "mac#"
 
 
 // node methods
@@ -517,3 +521,24 @@ replaceData{i+j<n}(
 , offset(i), count(j), data:string(m)
 )
 *)
+
+(* ****** ****** *)
+
+fun
+createDocumentFragment {d:addr}
+  (doc: !documentref(d)): domnoderef1D (DocumentFragment, d) = "mac#"
+// FIXME: not very safe
+// - you can put anything into a fragment
+// - and you can put a fragment almost anywhere
+// - for any c in children of fragment, ParentChild (NodeType(e), NodeType(p)) should hold
+//   where e is node at insertion point
+//
+// another approach? separate type for document fragments (track the node type of the insertion node)
+fun
+fragment_appendChild {g:cls;d:addr;l0:agz;p:addr}
+  (node: !domnoderef (g, d, l0, p), s: domnoderef1D (DocumentFragment, d))
+  : void = "mac#"
+fun
+fragment_insertBefore {g,g':cls;d:addr;l0:agz;p:addr}
+  (node: !domnoderef (g, d, l0, p), s: domnoderef1D (DocumentFragment, d), next: !domnoderef0 (g', d, l0))
+  : void = "mac#"

@@ -24,6 +24,10 @@ LIBATSCC2JS_targetloc
 "./../src/DATS/dom.dats"
 
 (* ****** ****** *)
+
+prval () = window_document_nonnull ()
+
+(* ****** ****** *)
 //
 fun
 highlight {d:agz;p:agz} (
