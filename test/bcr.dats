@@ -39,13 +39,13 @@ hello() = let
   val r = getBoundingClientRect (div)
   val () = assert (125.0 = r.height)
   val () = assert (125.0 = r.width)
-  // because 25px border + 25px padding + 25 content + 25 padding + 25 border = 125  
+  // because 25px border + 25px padding + 25 content + 25 padding + 25 border = 125
   val () = assert (r.height = offsetHeight div)
   val () = assert (r.width = offsetWidth div)
-  // because 25px border + 25px padding + 25 content + 25 padding + 25 border = 125  
+  // because 25px border + 25px padding + 25 content + 25 padding + 25 border = 125
   val () = assert (75.0 = clientHeight div)
   val () = assert (75.0 = clientWidth div)
-  // logs '75 75' because 25px padding + 25 content + 25 padding = 75  
+  // logs '75 75' because 25px padding + 25 content + 25 padding = 75
   val () = dom_free div
   val () = put_document (doc)
 in

@@ -510,30 +510,80 @@ getComputedStyle {d,l,p:addr | l > null} (
 (* ****** ****** *)
 // text/comment nodes
 
-(* TODO
-appendData(
-  CharacterData(n) >> CharacterData(n+m), data: string(m)
-): void
-insert{i<n}(CharacterData(n), offset:int(i), string data)
-deleteData{i+j<n}(CharacterData(n), offset:int(i), count:int(j))
-replaceData{i+j<n}(
-  CharacterData(n) >> CharacterData(n-j+m)
-, offset(i), count(j), data:string(m)
-)
-*)
+absvtype cdata(n:int,l:addr) = ptr
+vtypedef cdata0 (l:addr) = [n:int] cdata (n, l)
+
+prfun
+dom2cdata : {c:cls;d,l,p:addr | l > null; c <= CharacterData}
+  (!domnoderef(c, d, l, p) >> cdata0 (l)) -> ((!cdata0(l) >> domnoderef(c,d,l,p)) -<lin,prf> void)
+
+fun
+cdata_length {n:int;l:addr} (!cdata(n,l)): int(n) = "mac#cdata_length"
+fun
+cdata_data {n:int;l:addr} (!cdata(n,l)): string(n) = "mac#cdata_data"
+
+fun
+cdata_appendData {n,m:int;l:addr} (
+  cd: !cdata (n,l) >> cdata(n+m,l)
+, data: string(m)
+): void = "mac#cdata_appendData"
+
+fun
+cdata_insertData {i,n,m:int;l:addr | i >= 0; i < n} (
+  cd: !cdata(n,l) >> cdata(n+m,l)
+, offset: int(i)
+, data: string(m)
+): void = "mac#cdata_insertData"
+
+fun
+cdata_deleteData {i,j,n:int;l:addr | i >= 0; j >= 0; i + j <= n} (
+  cd: !cdata(n,l) >> cdata(n-j,l)
+, offset: int(i)
+, count: int(j)
+): void = "mac#cdata_deleteData"
+
+fun
+cdata_replaceData {i,j,n,m:int;l:addr | i >= 0; j >= 0; i + j < n} (
+  cd: !cdata(n,l) >> cdata(n - j + m,l)
+, offset: int(i)
+, count: int(j)
+, data: string(m)
+): void = "mac#cdata_replaceData"
 
 (* ****** ****** *)
+
+(*
+
+TODO: do this or not?
+
+Every fragment will have a parent node type it will get inserted into
+(either by appending or by inserting before the other child).
+
+fragment_type (c:cls, l:addr)
+
+fun
+createDocumentFragment {c:cls;d:addr}
+  (d: !documentref1(d)): [l:agz] (
+    fragment_parent_type (c, l)
+  | domnoderef (DocumentFragment, d, l, null)
+  )
+
+when appending to the document fragment or inserting, the new child's
+node type [n] MUST be allowable as a child of [c]!
+
+next, when we mount the fragment onto the tree: 
+
+- the [c] of the document fragment must be allowable as a child of the
+node [n] that is to become a parent of the fragment!
+
+- mounting a fragment also frees it
+
+*)
 
 fun
 createDocumentFragment {d:addr}
   (doc: !documentref(d)): domnoderef1D (DocumentFragment, d) = "mac#"
-// FIXME: not very safe
-// - you can put anything into a fragment
-// - and you can put a fragment almost anywhere
-// - for any c in children of fragment, ParentChild (NodeType(e), NodeType(p)) should hold
-//   where e is node at insertion point
-//
-// another approach? separate type for document fragments (track the node type of the insertion node)
+
 fun
 fragment_appendChild {g:cls;d:addr;l0:agz;p:addr}
   (node: !domnoderef (g, d, l0, p), s: domnoderef1D (DocumentFragment, d))
@@ -542,3 +592,86 @@ fun
 fragment_insertBefore {g,g':cls;d:addr;l0:agz;p:addr}
   (node: !domnoderef (g, d, l0, p), s: domnoderef1D (DocumentFragment, d), next: !domnoderef0 (g', d, l0))
   : void = "mac#"
+
+(* ****** ****** *)
+
+absvtype Event (d:addr, c:cls) = ptr
+(*
+typedef Event (d:addr) = @{
+  bubbles= bool
+, cancelable= bool
+, defaultPrevented= bool
+, target= [c:cls] domnoderef1 (c, d)
+, type= string
+}
+fun
+preventDefault (!Event(d)): void
+fun
+stopPropagation (!Event(d)): void
+*)
+(*
+hierarchy
+
+Event
+  UIEvent
+    MouseEvent
+    TouchEvent
+    FocusEvent
+    KeyboardEvent
+    WheelEvent
+    InputEvent
+
+MouseEvent {
+  altKey= bool,
+  button= intBtw(0,4),
+  buttons= intBtw(0,4),
+  clientX= double, // also: x
+  clientY= double, // also: y
+  ctrlKey= bool,
+  metaKey= bool,
+  movementX= double,
+  movementY= double,
+  screenX= double,
+  screenY= double,
+  shiftKey= bool,
+  getModifierState= (modifier) -> bool // modifier: as in keyboard event!
+}
+KeyboardEvent {
+  getModifierState= (modifier) -> bool,
+  altKey= bool,
+  charCode= int, // deprecated
+  code= string, // some code: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
+  ctrlKey= bool,
+  key= string, // hmmm
+  metaKey= bool,
+  repeat= bool,
+  shiftKey= bool,
+}
+WheelEvent {
+  deltaX= double,
+  deltaY= double,
+  deltaZ= double,
+  deltaMode = ulong // DOM_DELTA_PIXEL=0x00, DOM_DELTA_LINE=0X01, DOM_DELTA_PAGE=0x02
+}
+
+https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+// which DOM classes implement EventTarget???
+
+EventTarget.addEventListener(type: string, listener : EventListener, options)
+
+EventListener
+- an object with method handleEvent(e: !Event): void
+- or simply a function: (!Event) -> void
+- what is the lifetime of event listener??? unspec'd
+
+options:
+- either a record:
+  - capture: bool
+  - once: bool
+  - passive: bool (the handler will NEVER invoke preventDefault)
+- or a boolean: useCapture
+- or undefined
+
+EventTarget.removeEventListener(type,listener,options)
+- the values of arguments must match the corresponding addEventListener call!
+*)

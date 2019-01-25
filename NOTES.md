@@ -2,18 +2,31 @@
 
 http://domenlightenment.com/#1.2
 
-DONE: node types
-DONE: reflecting the node types back to the class decs
-DONE: node methods
-DONE: node properties
-TODO: class and data-* attributes
-DONE: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName, getElementsByClassName
-DONE: section 5, properties for elements
-DONE: section 6, style
-TODO: section 7, text node methods
-DONE: sec 8, document fragments
-TODO: 11, event handling! now this makes it all worth it! after this, integrate into my very own custom expression editor!
-TODO: more working programs to see if the current style is OK or not (especially with cycles and stuff)
+* DONE: node types
+* DONE: reflecting the node types back to the class decs
+* DONE: node methods
+* DONE: node properties
+* TODO: class and data-* attributes
+* DONE: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName,
+  getElementsByClassName
+* DONE: section 5, properties for elements
+* DONE: section 6, style
+* DONE: section 7, text node methods
+* DONE: sec 8, document fragments
+* TODO: 11, event handling! now this makes it all worth it! after
+  this, integrate into my very own custom expression editor!
+  * form events: submit, reset
+  * view events: resize, scroll
+  * keyboard events: keydown, keypress, keyup
+  * mouse events: mouseenter, mouseover, mousemove, mousedown,
+    mouseup, click, dblclick, mouseleave, mouseout, select
+  * window events: close
+  * touch events: cancel, end, enter, leave, move, start
+  * standard events:
+    * blur (FocusEvent), change (Event), click/dblclick (MouseEvent)
+    * DOMActivate (UIEvent)
+* TODO: more working programs to see if the current style is OK or not
+  (especially with cycles and stuff)
 
 # references
 
@@ -47,4 +60,3 @@ Node
   - Comment
   - Text
     - CDataSection
-*)
