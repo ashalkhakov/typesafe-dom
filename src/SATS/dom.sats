@@ -595,83 +595,175 @@ fragment_insertBefore {g,g':cls;d:addr;l0:agz;p:addr}
 
 (* ****** ****** *)
 
-absvtype Event (d:addr, c:cls) = ptr
-(*
-typedef Event (d:addr) = @{
-  bubbles= bool
-, cancelable= bool
-, defaultPrevented= bool
-, target= [c:cls] domnoderef1 (c, d)
-, type= string
-}
+classdec Event
+classdec UIEvent : Event
+classdec MouseEvent : UIEvent
+classdec TouchEvent : UIEvent
+classdec FocusEvent : UIEvent
+classdec KeyboardEvent : UIEvent
+classdec WheelEvent : UIEvent
+classdec InputEvent : UIEvent
+
+absvtype event(cls, addr) = ptr
+
+(* string ids for events, e.g. onload, and the type of events handled *)
+(* NOTE: c is a subtype of Event! *)
+abstype eventid(cls) = ptr
 fun
-preventDefault (!Event(d)): void
+eq_eventid_eventid {c1,c2:cls} (
+  eventid(c1), eventid(c2)
+): [c:cls] bool (c1 <= c && c2 <= c) = "mac#ats2jspre_eq_string_string"
 fun
-stopPropagation (!Event(d)): void
+ne_eventid_eventid {c1,c2:cls} (
+  eventid(c1), eventid(c2)
+): [c:cls] bool (~(c1 <= c && c2 <= c)) = "mac#ats2jspre_ne_string_string"
+
+macdef scroll = $extval (eventid(UIEvent), "'scroll'")
+macdef load = $extval (eventid(UIEvent), "'load'")
+macdef unload = $extval (eventid(UIEvent), "'unload'")
+
+macdef click = $extval (eventid(MouseEvent), "'click'")
+macdef dblclick = $extval (eventid(MouseEvent), "'dblclick'")
+macdef mousedown = $extval (eventid(MouseEvent), "'mousedown'")
+macdef mouseenter = $extval (eventid(MouseEvent), "'mouseenter'")
+macdef mouseleave = $extval (eventid(MouseEvent), "'mouseleave'")
+macdef mousemove = $extval (eventid(MouseEvent), "'mousemove'")
+macdef mouseout = $extval (eventid(MouseEvent), "'mouseout'")
+macdef mouseup = $extval (eventid(MouseEvent), "'mouseup'")
+macdef mouseover = $extval (eventid(MouseEvent), "'mouseover'")
+
+// TODO: form events (change, reset, submit, select, input)
+// TODO: drag events (drag, dragstart, dragend, dragenter, dragleave, dragover, drop)
+
+macdef focus = $extval (eventid(FocusEvent), "'focus'")
+macdef blur = $extval (eventid(FocusEvent), "'blur'")
+macdef focusin = $extval (eventid(FocusEvent), "'focusin'")
+macdef focusout = $extval (eventid(FocusEvent), "'focusout'")
+
+macdef keydown = $extval (eventid(KeyboardEvent), "'keydown'")
+macdef keypress = $extval (eventid(KeyboardEvent), "'keypress'")
+macdef keyup = $extval (eventid(KeyboardEvent), "'keyup'")
+
+macdef wheel = $extval (eventid(WheelEvent), "'wheel'")
+
+typedef event_prop (c:cls, r:t0p) = {c1:cls;d:addr | c1 <= c} (!event(c1, d)) -> r
+typedef event_prop1 (c:cls, a:t0p, r:t0p) = {c1:cls;d:addr | c1 <= c} (!event(c1, d), a) -> r
+
+fun ev_bubbles : event_prop (Event, bool) = "mac#ev_bubbles"
+fun ev_cancelable : event_prop (Event, bool) = "mac#ev_cancelable"
+(* TODO: investigate if can we change/unlink these elements in the handler?
+TODO: investigate if these can be null?
+ *)
+fun ev_currentTarget : {d:addr} (!event(Event, d)) -> [c:cls] domnoderef1D (c, d)(*readonly*)
+fun ev_target : {d:addr} (!event(Event, d)) -> [c:cls] domnoderef1D (c, d)(*readonly*)
+fun ev_defaultPrevented : event_prop (Event, bool) = "mac#defaultPrevented"
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase
+fun ev_eventPhase : event_prop (Event, string) = "mac#ev_eventPhase"
+fun ev_type : {c:cls;d:addr} (!event(c, d)) -> eventid(c) = "mac#ev_type"
+fun ev_timeStamp : event_prop (Event, int) = "mac#ev_timeStamp"
+
+fun ev_preventDefault : event_prop (Event, void) = "mac#ev_preventDefault"
+fun ev_stopPropagation : event_prop (Event, void) = "mac#ev_stopPropagation"
+
+absvtype eventlistener(cls) = ptr
+fun eventlistener_obj {v:vtype} {d:addr} {c:cls} (
+  state: v
+, et: eventid(c)
+, handler: (v, !event(c, d)) -> v
+, free: (v) -> void
+): eventlistener(c) = "mac#eventlistener_obj"
+fun eventlistener_fun {d:addr} {c:cls} (
+  et: eventid(c)
+, handler: (!event(c, d)) -> void
+): eventlistener(c) = "mac#eventlistener_fun"
+fun eventlistener_free {c:cls} (eventlistener(c)): void = "mac#eventlistener_free"
+// NOTE: there doesn't seem to be any provision about event listener lifetime in the DOM!
+castfn
+eventlistener_leak {c:cls} (eventlistener(c)): void
+
+dataprop EventTarget (cls) =
+  | ETdoc (Document)
+  | ETelem (Element)
+
+typedef event_options = $extype_struct "EventOptions" of {
+  capture= bool
+, once= bool
+, passive= bool
+}
+fun event_options (capture: bool, once: bool, passive: bool) : event_options = "mac#event_options"
+
+fun
+addEventListener {e,c:cls;d,l,p:addr | l > null} (
+  EventTarget(c)
+| !domnoderef (c, d, l, p)
+, etype: eventid(e)
+, listener: !eventlistener(e)
+, options: event_options
+): void = "mac#addEventListener"
+fun
+removeEventListener {e,c:cls;d,l,p:addr | l > null} (
+  EventTarget(c)
+| !domnoderef (c, d, l, p)
+, etype: eventid(e)
+, listener: !eventlistener(e)
+, options: event_options
+): void = "mac#removeEventListener"
+
+(* TODO: with https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+fun
+dispatchEvent {e,c:cls;d:addr} (
+  EventTarget(c)
+| !domnoderef1D(c, d)
+, !event(e, d) // must be an instance of CustomEvent
+): bool(*NOT cancelled*)
 *)
+
+abstype KeyboardEvent_key = string
+// FIXME: what to do with it?
+
+fun mouse_altKey : event_prop (MouseEvent, bool) = "mac#mouse_altKey"
+fun mouse_button : event_prop (MouseEvent, intBtw(0, 4)) = "mac#mouse_button"
+fun mouse_buttons : event_prop (MouseEvent, intBtw(0, 4)) = "mac#mouse_buttons"
+fun mouse_clientX : event_prop (MouseEvent, double) = "mac#mouse_clientX"
+fun mouse_clientY : event_prop (MouseEvent, double) = "mac#mouse_clientY"
+fun mouse_ctrlKey : event_prop (MouseEvent, bool) = "mac#mouse_ctrlKey"
+fun mouse_metaKey : event_prop (MouseEvent, bool) = "mac#mouse_metaKey"
+fun mouse_movementX : event_prop (MouseEvent, double) = "mac#mouse_movementX"
+fun mouse_movementY : event_prop (MouseEvent, double) = "mac#mouse_movementY"
+fun mouse_screenX : event_prop (MouseEvent, double) = "mac#mouse_screenX"
+fun mouse_screenY : event_prop (MouseEvent, double) = "mac#mouse_screenY"
+fun mouse_shiftKey : event_prop (MouseEvent, bool) = "mac#mouse_shiftKey"
+fun mouse_getModifierState : event_prop1 (MouseEvent, KeyboardEvent_key, bool) = "mac#mouse_getModifierState"
+
 (*
-hierarchy
-
-Event
-  UIEvent
-    MouseEvent
-    TouchEvent
-    FocusEvent
-    KeyboardEvent
-    WheelEvent
-    InputEvent
-
-MouseEvent {
-  altKey= bool,
-  button= intBtw(0,4),
-  buttons= intBtw(0,4),
-  clientX= double, // also: x
-  clientY= double, // also: y
-  ctrlKey= bool,
-  metaKey= bool,
-  movementX= double,
-  movementY= double,
-  screenX= double,
-  screenY= double,
-  shiftKey= bool,
-  getModifierState= (modifier) -> bool // modifier: as in keyboard event!
-}
-KeyboardEvent {
-  getModifierState= (modifier) -> bool,
-  altKey= bool,
-  charCode= int, // deprecated
-  code= string, // some code: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
-  ctrlKey= bool,
-  key= string, // hmmm
-  metaKey= bool,
-  repeat= bool,
-  shiftKey= bool,
-}
-WheelEvent {
-  deltaX= double,
-  deltaY= double,
-  deltaZ= double,
-  deltaMode = ulong // DOM_DELTA_PIXEL=0x00, DOM_DELTA_LINE=0X01, DOM_DELTA_PAGE=0x02
-}
-
-https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
-// which DOM classes implement EventTarget???
-
-EventTarget.addEventListener(type: string, listener : EventListener, options)
-
-EventListener
-- an object with method handleEvent(e: !Event): void
-- or simply a function: (!Event) -> void
-- what is the lifetime of event listener??? unspec'd
-
-options:
-- either a record:
-  - capture: bool
-  - once: bool
-  - passive: bool (the handler will NEVER invoke preventDefault)
-- or a boolean: useCapture
-- or undefined
-
-EventTarget.removeEventListener(type,listener,options)
-- the values of arguments must match the corresponding addEventListener call!
+// TODO: TouchEvent
+altKey: bool
+changedTouches: TouchList
+ctrlKey: bool
+metaKey: bool
+shiftKey: bool
+targetTouches: TouchList
+touches: TouchList
 *)
+
+fun focus_relatedTarget {e:cls;d:addr} (
+  !event(FocusEvent, d)
+): [p:addr;e:cls] (EventTarget (e) | domnoderef0(e, d, p)) = "mac#focus_relatedTarget"
+
+fun keyboard_getModifierState : event_prop1 (KeyboardEvent, KeyboardEvent_key, bool) = "mac#keyboard_getModifierState"
+fun keyboard_altKey : event_prop (KeyboardEvent, bool) = "mac#keyboard_altKey"
+//  charCode : int // deprecated
+// some code: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
+fun keyboard_code : event_prop (KeyboardEvent, string) = "mac#keyboard_code"
+fun keyboard_ctrlKey : event_prop (KeyboardEvent, bool) = "mac#keyboard_ctrlKey"
+fun keyboard_key : event_prop (KeyboardEvent, KeyboardEvent_key) = "mac#keyboard_key"
+fun keyboard_metaKey : event_prop (KeyboardEvent, bool) = "mac#keyboard_metaKey"
+fun keyboard_repeat : event_prop (KeyboardEvent, bool) = "mac#keyboard_repeat"
+fun keyboard_shiftKey : event_prop (KeyboardEvent, bool) = "mac#keyboard_shiftKey"
+
+fun wheel_deltaX : event_prop (WheelEvent, double) = "mac#wheel_deltaX"
+fun wheel_deltaY : event_prop (WheelEvent, double) = "mac#wheel_deltaY"
+fun wheel_deltaZ : event_prop (WheelEvent, double) = "mac#wheel_deltaZ"
+// DOM_DELTA_PIXEL=0x00, DOM_DELTA_LINE=0X01, DOM_DELTA_PAGE=0x02
+fun wheel_deltaMode : event_prop (WheelEvent, int) = "mac#wheel_deltaMode"

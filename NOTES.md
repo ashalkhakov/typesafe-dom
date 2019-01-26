@@ -13,18 +13,11 @@ http://domenlightenment.com/#1.2
 * DONE: section 6, style
 * DONE: section 7, text node methods
 * DONE: sec 8, document fragments
-* TODO: 11, event handling! now this makes it all worth it! after
+* DONE: 11, event handling! now this makes it all worth it! after
   this, integrate into my very own custom expression editor!
-  * form events: submit, reset
-  * view events: resize, scroll
-  * keyboard events: keydown, keypress, keyup
-  * mouse events: mouseenter, mouseover, mousemove, mousedown,
-    mouseup, click, dblclick, mouseleave, mouseout, select
-  * window events: close
-  * touch events: cancel, end, enter, leave, move, start
-  * standard events:
-    * blur (FocusEvent), change (Event), click/dblclick (MouseEvent)
-    * DOMActivate (UIEvent)
+* TODO: form events: submit, reset
+* TODO: window events: close
+* TODO: touch events: cancel, end, enter, leave, move, start
 * TODO: more working programs to see if the current style is OK or not
   (especially with cycles and stuff)
 

@@ -25,7 +25,8 @@ scrollIntoView_dats.js \
 style_dats.js \
 computedStyle_dats.js \
 frag1_dats.js \
-text_dats.js
+text_dats.js \
+events_dats.js
 
 ######
 
