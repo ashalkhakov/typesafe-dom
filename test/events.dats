@@ -24,14 +24,6 @@ LIBATSCC2JS_targetloc
 
 (* ****** ****** *)
 
-(*
-http://domenlightenment.com/#11
-TODO: 11, event handling! now this makes it all worth it! after this, integrate into my very own custom expression editor!
-https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
-https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
-
-https://developer.mozilla.org/en-US/docs/Web/API/Event
-*)
 extern
 fun
 hello(): void = "mac#"

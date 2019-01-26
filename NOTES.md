@@ -6,7 +6,8 @@ http://domenlightenment.com/#1.2
 * DONE: reflecting the node types back to the class decs
 * DONE: node methods
 * DONE: node properties
-* TODO: class and data-* attributes
+* TODO: class attribute
+* DONE: data-* attributes
 * DONE: 4.2,4.4 querySelector, querySelectorAll, getElementsByTagName,
   getElementsByClassName
 * DONE: section 5, properties for elements

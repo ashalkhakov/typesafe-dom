@@ -508,6 +508,28 @@ getComputedStyle {d,l,p:addr | l > null} (
 ): CSSStyleDeclaration (l, false) = "mac#window_getComputedStyle"
 
 (* ****** ****** *)
+// dataset
+
+absvtype strmap (p:addr) = ptr
+
+fun
+get_dataset {d,l,p:addr | l > null} (
+  !domnoderef(Element, d, l, p)
+): strmap (l) = "mac#get_dataset"
+castfn
+strmap_free {l:addr} (strmap l): void
+
+fun strmap_get {p:addr} (
+  s: !strmap(p), k: string
+): Option_vt string = "mac#strmap_get"
+fun strmap_delete {p:addr} (
+  s: !strmap(p), k: string
+): void = "mac#strmap_delete"
+fun strmap_set {p:addr} (
+  s: !strmap(p), k: string, v: string
+): void = "mac#strmap_set"
+
+(* ****** ****** *)
 // text/comment nodes
 
 absvtype cdata(n:int,l:addr) = ptr
