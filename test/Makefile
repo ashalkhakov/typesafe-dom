@@ -16,7 +16,7 @@ all::
 ######
 
 all:: \
-tests_dats.js \
+index_dats.js \
 offset_dats.js \
 bcr_dats.js \
 efp_dats.js \

@@ -297,7 +297,7 @@ testcase11 {p:addr}
 
   val a = firstChild d
   val () = assert (~domnoderef_is_null a)
- 
+
   val atts = attributes a
   macdef myassert (x, v) = {
     val attribute = domnamednodemap_getNamedItem (atts, ,(x))

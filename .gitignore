@@ -8,4 +8,6 @@
 *_?ats.c
 *.exe
 
+__pycache__/
+
 ###### end of [.gitignore] ######
