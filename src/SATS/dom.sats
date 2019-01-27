@@ -1,5 +1,5 @@
 (*
-** Hello, world!
+** DOM API in ATS
 *)
 
 (* ****** ****** *)
@@ -7,10 +7,10 @@
 #define
 LIBATSCC2JS_targetloc
 "$PATSHOME\
-/contrib/libatscc2js/ATS2-0.3.2"
+/contrib/libatscc2js"
 //
-#include
-"{$LIBATSCC2JS}/staloadall.hats"
+#staload
+"{$LIBATSCC2JS}/mylibies.hats"
 //
 (* ****** ****** *)
 
